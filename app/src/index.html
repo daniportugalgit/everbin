@@ -12,9 +12,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     
-    <!-- Custom CSS -->
-    <!--
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <!-- Custom CSS (done directly in index.js via webpack)
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
     -->
 
     <!-- Animation CSS -->
@@ -30,7 +29,29 @@
       </a>
     </nav>
 
-    <h1>Content</h1>
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+          <div class="card">
+            <h4 class="card-header">Create New Bin</h4>
+            <div class="card-body">
+              <form>
+                <div class="form-group">
+                  <textarea class="form-control" id="createTextarea" placeholder="Paste or type your text here"></textarea>
+                </div>
+                <div class="align-right">
+                  <button type="submit" class="btn btn-primary">Create!</button>
+                </div>
+            </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <h1>Content</h1>
+        </div>
+      </div>
+    </div>
+    
     
     
     
