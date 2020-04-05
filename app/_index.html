@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />  
+  <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <title>SBRL - Dashboard</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  
+  <script src="./app.js"></script>
+</head>
+<body onresize="App.onResize()">
+
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
+
+    <!--<a class="navbar-brand logo" id="logo" href="">999.888.777</a>-->
+    <div id="top_left">
+      
+      <div id="total_supply_div" onclick="App.setTotalSupply()">
+        <span id="total_supply_integer">000.000.000</span>
+        <span id="total_supply_float">000000000000000000</span>
+      </div>
+
+      <span id="tokenSymbol">SBRL</span>
+
+      <div id="totalSupply_loader_container"  style="display: none;">
+        <div id="totalSupply_mini_loader" class="animate-bottom"></div>
+      </div>
+
+    </div>
+
+    
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        
+      <span class="navbar-toggler-icon"></span>
+
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav" style="">
+
+      <ul class="navbar-nav">
+
+        <li class="nav-item clickable" onclick="App.showSection('sec_supply')">
+          <a class="nav-link active">Suprimento</a>
+        </li>
+
+        <li class="nav-item clickable" onclick="App.showSection('sec_blocklist')">
+          <a class="nav-link">Blocklist</a>
+        </li>
+
+        <li class="nav-item clickable" onclick="App.showSection('sec_roles')">
+          <a class="nav-link">Colaboradores</a>
+        </li>
+
+        <li class="nav-item clickable" onclick="App.showSection('sec_maintenance')">
+          <a class="nav-link">Zeladoria</a>
+        </li>
+
+      </ul>
+
+    </div>
+
+    <div id="user_div">
+      <div id="user_subcontainer">
+        <div id="connect_button_div" style="display: none;">
+          <form onSubmit="App.metamaskConnect(); return false;">
+              <button type="submit" class="btn btn-primary" id="connectToMetamask_button">Fazer login no Metamask</button>
+          </form>
+        </div>
+
+        <div id="speed_div" onclick="App.toggleSpeed()" style="display: none;">
+          <div id="speed_button_div">
+            <div id="speed1_icon" style="display:none;">
+              <img src="app/img/speed_1.png" height="18px">
+            </div>
+
+            <div id="speed2_icon">
+              <img src="app/img/speed_2.png" height="18px">
+            </div>
+            
+            <div id="speed3_icon" style="display:none;">
+              <img src="app/img/speed_3.png" height="18px">
+            </div>
+
+            <div id="speed4_icon" style="display:none;">
+              <img src="app/img/speed_4.png" height="18px">
+            </div>
+            
+          </div>
+          <div id="speed_info_div">
+            <span id="speed_info">7</span>
+          </div>
+        </div>
+
+        <div id="user_address_div" style="display: none;" onclick="App.copyUserToClipboard()">
+          <p id="user_address">0x0000000000000000000000000000000000000000</p>
+          <div id="badges">
+            <span class="light_badge" id="admin_badge" style="display: none;">ADMIN</span>
+            <span class="light_badge" id="minter_badge" style="display: none;">MINTER</span>
+            <span class="light_badge" id="burner_badge" style="display: none;">BURNER</span>
+            <span class="light_badge" id="law_badge" style="display: none;">LAW</span>
+            <span class="light_badge" id="partner_badge" style="display: none;">PARTNER</span>
+            <!--<span class="light_badge" id="paysys_badge" style="display: none;">PAYSYS</span>
+            <span class="light_badge" id="seller_badge" style="display: none;">SELLER</span> -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+  </nav>
+
+  <div class="container">    
+    <div class="flexbox">
+      <div id="loader" class="animate-bottom" style="display: block;">
+      </div>
+    </div>
+
+    <div id="contentWrapper">
+      <section id="sec_supply">
+        <div class="d-flex justify-content-center">
+          <div class="card marginalized" style="width: 23rem;">
+            <img src="app/img/balance.jpg" class="card-img-top" alt="Balance Of">
+            <div class="card-body">
+              <h5 class="card-title">Consultar Saldo</h5>
+              <p class="card-text" id="balanceOf_text">Consulte o saldo de qualquer endereço.</p>
+              <form id="balanceOf_form" onsubmit="App.balanceOf(); return false;">
+                <div class="form-group">
+                  <label for="balanceOf_address" class="control-label">Endereço</label>
+                  <input
+                    required
+                    class="form-control small_text"
+                    id="balanceOf_address"
+                    maxlength="42"
+                    minlength="42"
+                    placeholder="ex: 0x93e66d9baea28c17d9fc393b53e3fbdd76899da" />
+                </div>
+                <input type="submit" name="Submit" value="Submit" style="display: none;"/>
+              </form>
+
+              <button id="balanceOf_button" class="btn btn-primary" onclick="App.balanceOf()">Consultar</button>
+              <div id="balanceOf_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="balanceOf_result" style="display:none"  class="bc_response_large"></p>
+
+            </div>
+          </div>
+
+          <div class="card marginalized" style="width: 23rem;">
+            <img src="app/img/mint.jpg" class="card-img-top" alt="Mint">
+            <div class="card-body">
+              <h5 class="card-title">Emitir Tokens</h5>
+              <p class="card-text" id="mint_text">Crie novos tokens em um endereço.</p>
+              <form id="mint_form" onsubmit="App.mint(); return false;">
+                <div class="form-group">
+                  <label for="mint_number" class="control-label">Quantidade</label>
+                  <input
+                    required
+                    type="number"
+                    step="any"
+                    class="form-control medium_text"
+                    id="mint_number"
+                    min="1"
+                    max="999999999"
+                    placeholder="ex: 3" />
+                </div>
+
+                <div class="form-group">
+                  <label for="mint_address" class="control-label">Endereço</label>
+                  <input
+                    required
+                    class="form-control small_text"
+                    id="mint_address"
+                    maxlength="42"
+                    minlength="42"
+                    placeholder="ex: 0x93e66d9baea28c17d9fc393b53e3fbdd76899da" />
+                </div>
+                <input type="submit" name="Submit" value="Submit" style="display: none;"/>
+              </form>
+
+              <button id="mint_button" class="btn btn-primary" onclick="App.mint()">Emitir</button>
+              <div id="mint_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="mint_result" style="display:none"  class="bc_response"></p>
+
+            </div>
+          </div>
+
+          <div class="card marginalized" style="width: 23rem;">
+            <img src="app/img/burn.jpg" class="card-img-top" alt="Burn">
+            <div class="card-body">
+              <h5 class="card-title">Destruir Tokens</h5>
+              <p class="card-text" id="burn_text">Destrua tokens de um endereço.</p>
+              <form id="burn_form" onsubmit="App.burn(); return false;">
+                <div class="form-group">
+                  <label for="burn_number" class="control-label">Quantidade</label>
+                  <input
+                    required
+                    type="number"
+                    step="any"
+                    class="form-control medium_text"
+                    id="burn_number"
+                    min="0"
+                    max="999999999"
+                    placeholder="ex: 3" />
+                </div>
+
+                <div class="form-group">
+                  <label for="burn_address" class="control-label">Endereço</label>
+                  <input
+                    required
+                    class="form-control small_text"
+                    id="burn_address"
+                    maxlength="42"
+                    minlength="42"
+                    placeholder="ex: 0x93e66d9baea28c17d9fc393b53e3fbdd76899da" />
+                </div>
+                <input type="submit" name="Submit" value="Submit" style="display: none;"/>
+              </form>
+
+              <button id="burn_button" class="btn btn-primary" onclick="App.burn()">Destruir</button>
+              <div id="burn_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="burn_result" style="display:none"  class="bc_response"></p>
+              
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <section id="sec_blocklist">
+        <div class="d-flex justify-content-center">
+          <div class="card marginalized" style="width: 23rem;">
+            <img src="app/img/isFrozen.jpg" class="card-img-top" alt="Is Frozen">
+            <div class="card-body">
+              <h5 class="card-title">Consultar Blocklist</h5>
+              <p class="card-text" id="isFrozen_text">Verifique se um endereço está impedido de movimentar tokens e criar procurações.</p>
+              <form id="isFrozen_form" onsubmit="App.isFrozen(); return false;">
+                <div class="form-group">
+                  <label for="isFrozen_address" class="control-label">Endereço</label>
+                  <input
+                    required
+                    class="form-control small_text"
+                    id="isFrozen_address"
+                    maxlength="42"
+                    minlength="42"
+                    placeholder="ex: 0x93e66d9baea28c17d9fc393b53e3fbdd76899da" />
+                </div>
+                <input type="submit" name="Submit" value="Submit" style="display: none;"/>
+              </form>
+
+              <button id="isFrozen_button" class="btn btn-primary" onclick="App.isFrozen()">Consultar</button>
+              <div id="isFrozen_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="isFrozen_result" style="display:none"  class="bc_response_large"></p>
+
+            </div>
+          </div>
+
+          <div class="card marginalized" style="width: 23rem;">
+            <img src="app/img/addToBlocklist.jpg" class="card-img-top" alt="Add to Blocklist">
+            <div class="card-body">
+              <h5 class="card-title">Adicionar à Blocklist</h5>
+              <p class="card-text" id="freezeAccount_text">Um agente da Lei pode congelar um endereço.</p>
+              <form id="freezeAccount_form" onsubmit="App.freezeAccount(); return false;">
+                <div class="form-group">
+                  <label for="freezeAccount_address" class="control-label">Endereço</label>
+                  <input
+                    required
+                    class="form-control small_text"
+                    id="freezeAccount_address"
+                    maxlength="42"
+                    minlength="42"
+                    placeholder="ex: 0x93e66d9baea28c17d9fc393b53e3fbdd76899da" />
+                </div>
+                <input type="submit" name="Submit" value="Submit" style="display: none;"/>
+              </form>
+
+              <button id="freezeAccount_button" class="btn btn-primary" onclick="App.freezeAccount()">Adicionar</button>
+              <div id="freezeAccount_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="freezeAccount_result" style="display:none"  class="bc_response"></p>
+              
+            </div>
+          </div>
+
+          <div class="card marginalized" style="width: 23rem;">
+            <img src="app/img/removeFromBlocklist.jpg" class="card-img-top" alt="Remove from Blocklist">
+            <div class="card-body">
+              <h5 class="card-title">Remover da Blocklist</h5>
+              <p class="card-text" id="unfreezeAccount_text">Um agente da Lei pode descongelar um endereço.</p>
+              <form id="unfreezeAccount_form" onsubmit="App.unfreezeAccount(); return false;">
+                <div class="form-group">
+                  <label for="unfreezeAccount_address" class="control-label">Endereço</label>
+                  <input
+                    required
+                    class="form-control small_text"
+                    id="unfreezeAccount_address"
+                    maxlength="42"
+                    minlength="42"
+                    placeholder="ex: 0x93e66d9baea28c17d9fc393b53e3fbdd76899da" />
+                </div>
+                <input type="submit" name="Submit" value="Submit" style="display: none;"/>
+              </form>
+
+              <button id="unfreezeAccount_button" class="btn btn-primary" onclick="App.unfreezeAccount()">Remover</button>
+              <div id="unfreezeAccount_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="unfreezeAccount_result" style="display:none"  class="bc_response"></p>
+              
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="sec_roles">
+        <div class="d-flex justify-content-center">
+          <div class="card marginalized" style="width: 23rem;">
+            <img src="app/img/hasRole.jpg" class="card-img-top" alt="Has Role">
+            <div class="card-body">
+              <h5 class="card-title">Consultar Colaborador</h5>
+              <p class="card-text" id="hasRole_text">Verifique se um endereço possui determinado perfil.</p>
+              <form id="hasRole_form" onsubmit="App.hasRole(); return false;">
+                <div class="form-group">
+                  <label for="hasRole_number" class="control-label">Perfil</label>
+                  <select class="selectpicker form-control medium_text" id="hasRole_number">
+                    <option value="2">Minter (emite tokens)</option>
+                    <option value="3">Burner (destrói tokens)</option>
+                    <option value="4">Law (gerencia a blocklist)</option>
+                    <option value="5">Partner (vende produtos por tokens)</option>
+                    <!--<option value="6">PaySys (pode iniciar SmartBuys)</option>
+                    <option value="7">Seller (pode receber tokens de SmartBuys)</option>-->
+                    <option value="1">Admin (gerencia colaboradores e zeladoria)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="hasRole_address" class="control-label">Endereço</label>
+                  <input
+                    required
+                    class="form-control small_text"
+                    id="hasRole_address"
+                    maxlength="42"
+                    minlength="42"
+                    placeholder="ex: 0x93e66d9baea28c17d9fc393b53e3fbdd76899da" />
+                </div>
+                <input type="submit" name="Submit" value="Submit" style="display: none;"/>
+              </form>
+
+              <button id="hasRole_button" class="btn btn-primary" onclick="App.hasRole()">Consultar</button>
+              <div id="hasRole_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="hasRole_result" style="display:none"  class="bc_response_large"></p>
+
+            </div>
+          </div>
+
+          <div class="card marginalized" style="width: 23rem;">
+            <img src="app/img/addRole.jpg" class="card-img-top" alt="Add Role">
+            <div class="card-body">
+              <h5 class="card-title">Adicionar Colaborador</h5>
+              <p class="card-text" id="addRole_text">Adicione um perfil a um endereço à sua escolha.</p>
+              <form id="addRole_form" onsubmit="App.addRole(); return false;">
+                <div class="form-group">
+                  <label for="addRole_number" class="control-label">Perfil</label>
+                  <select class="selectpicker form-control medium_text" id="addRole_number">
+                    <option value="2">Minter (emite tokens)</option>
+                    <option value="3">Burner (destrói tokens)</option>
+                    <option value="4">Law (gerencia a blocklist)</option>
+                    <option value="5">Partner (vende produtos por tokens)</option>
+                    <!--<option value="6">PaySys (pode iniciar SmartBuys)</option>
+                    <option value="7">Seller (pode receber tokens de SmartBuys)</option>-->
+                    <option value="1">Admin (gerencia colaboradores e zeladoria)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="addRole_address" class="control-label">Endereço</label>
+                  <input
+                    required
+                    class="form-control small_text"
+                    id="addRole_address"
+                    maxlength="42"
+                    minlength="42"
+                    placeholder="ex: 0x93e66d9baea28c17d9fc393b53e3fbdd76899da" />
+                </div>
+                <input type="submit" name="Submit" value="Submit" style="display: none;"/>
+              </form>
+
+              <button id="addRole_button" class="btn btn-primary" onclick="App.addRole()">Adicionar</button>
+              <div id="addRole_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="addRole_result" style="display:none"  class="bc_response"></p>
+              
+            </div>
+          </div>
+
+          <div class="card marginalized" style="width: 23rem;">
+            <img src="app/img/removeRole.jpg" class="card-img-top" alt="Remove Role">
+            <div class="card-body">
+              <h5 class="card-title">Remover Colaborador</h5>
+              <p class="card-text" id="removeRole_text">Remova um perfil de um endereço à sua escolha.</p>
+              <form id="removeRole_form" onsubmit="App.removeRole(); return false;">
+                <div class="form-group">
+                  <label for="removeRole_number" class="control-label">Perfil</label>
+                  <select class="selectpicker form-control medium_text" id="removeRole_number">
+                    <option value="2">Minter (emite tokens)</option>
+                    <option value="3">Burner (destrói tokens)</option>
+                    <option value="4">Law (gerencia a blocklist)</option>
+                    <option value="5">Partner (vende produtos por tokens)</option>
+                    <!--<option value="6">PaySys (pode iniciar SmartBuys)</option>
+                    <option value="7">Seller (pode receber tokens de SmartBuys)</option>-->
+                    <option value="1">Admin (gerencia colaboradores e zeladoria)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="removeRole_address" class="control-label">Endereço</label>
+                  <input
+                    required
+                    class="form-control small_text"
+                    id="removeRole_address"
+                    maxlength="42"
+                    minlength="42"
+                    placeholder="ex: 0x93e66d9baea28c17d9fc393b53e3fbdd76899da" />
+                </div>
+                <input type="submit" name="Submit" value="Submit" style="display: none;"/>
+              </form>
+
+              <button id="removeRole_button" class="btn btn-primary" onclick="App.removeRole()">Remover</button>
+              <div id="removeRole_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="removeRole_result" style="display:none"  class="bc_response"></p>
+              
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="sec_maintenance">
+        <div class="d-flex justify-content-center">
+          <div class="card marginalized" style="width: 23rem;" id="pause_div">
+            <img src="app/img/pause.jpg" class="card-img-top" alt="Pause">
+            <div class="card-body">
+              <h5 class="card-title">Pausar Sistema</h5>
+              <p class="card-text" id="pause_text">Nenhum usuário conseguirá transferir tokens ou criar procurações enquanto o sistema estiver pausado. Também será impossível emitir e destruir tokens neste período.
+              </p>
+              
+              <button id="pause_button" class="btn btn-primary" onclick="App.pause()">Pausar Sistema</button>
+              <div id="pause_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="pause_result" style="display:none"  class="bc_response"></p>
+            </div>
+
+          </div>
+
+          <div class="card marginalized" style="width: 23rem;" id="unpause_div">
+            <img src="app/img/play.jpg" class="card-img-top" alt="Unpause">
+            <div class="card-body">
+              <h5 class="card-title">Retomar Sistema</h5>
+              <p class="card-text" id="unpause_text">O sistema está pausado no momento. Deseja dar play?</p>
+              
+              <button id="unpause_button" class="btn btn-primary" onclick="App.unpause()">Retomar Sistema</button>
+              <div id="unpause_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="unpause_result" style="display:none"  class="bc_response"></p>
+              
+            </div>
+          </div>
+
+          <div class="card marginalized" style="width: 23rem;">
+            <img src="app/img/wipeAccount.jpg" class="card-img-top" alt="Wipe Account">
+            <div class="card-body">
+              <h5 class="card-title">Zerar Conta</h5>
+              <p class="card-text" id="wipeAccount_text">Destrua todos os tokens de um endereço que está congelado.</p>
+              <form id="wipeAccount_form" onsubmit="App.wipeAccount(); return false;">
+                <div class="form-group">
+                  <label for="wipeAccount_address" class="control-label">Endereço</label>
+                  <input
+                    required
+                    class="form-control small_text"
+                    id="wipeAccount_address"
+                    maxlength="42"
+                    minlength="42"
+                    placeholder="ex: 0x93e66d9baea28c17d9fc393b53e3fbdd76899da" />
+                </div>
+                <input type="submit" name="Submit" value="Submit" style="display: none;"/>
+              </form>
+
+              <button id="wipeAccount_button" class="btn btn-primary" onclick="App.wipeAccount()">Zerar Conta</button>
+              <div id="wipeAccount_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="wipeAccount_result" style="display:none"  class="bc_response"></p>
+
+            </div>
+          </div>
+
+          <div class="card marginalized" style="width: 23rem;">
+            <img src="app/img/reclaimToken.jpg" class="card-img-top" alt="Reclaim Token">
+            <div class="card-body">
+              <h5 class="card-title">Resgatar Tokens</h5>
+              <p class="card-text" id="reclaimToken_text">Tokens enviados por engano para a Proxy podem ser resgatados.</p>
+              <form id="reclaimToken_form" onsubmit="App.reclaimToken(); return false;">
+                <div class="form-group">
+                  <label for="reclaimToken_address" class="control-label">Token</label>
+                  <input
+                    required
+                    class="form-control small_text"
+                    id="reclaimToken_address"
+                    maxlength="42"
+                    minlength="42"
+                    placeholder="ex: 0x93e66d9baea28c17d9fc393b53e3fbdd76899da" />
+                </div>
+                <div class="form-group">
+                  <label for="reclaimToken_address2" class="control-label">Destinatário</label>
+                  <input
+                    required
+                    class="form-control small_text"
+                    id="reclaimToken_address2"
+                    maxlength="42"
+                    minlength="42"
+                    placeholder="ex: 0x93e66d9baea28c17d9fc393b53e3fbdd76899da" />
+                </div>
+                <input type="submit" name="Submit" value="Submit" style="display: none;"/>
+              </form>
+
+              <button id="reclaimToken_button" class="btn btn-primary" onclick="App.reclaimToken()">Resgatar</button>
+              <div id="reclaimToken_mini_loader" class="animate-bottom" style="display: none;"></div>
+              
+              <p id="reclaimToken_result" style="display:none"  class="bc_response"></p>
+              
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div id="version">
+    <p id="versionLabel">v 0.9.3</p>
+  </div>
+
+  <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>

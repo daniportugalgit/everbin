@@ -22,7 +22,7 @@
     <title>Everbin | Pastebin on the Ethereum blockchain</title>
   </head>
   <body>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-light bg-light justify-content-center">
       <a class="navbar-brand"   id="logo" href="#">
         <img src="img/logo.png" width="40px">
         Everbin: no moderation, no admin, no censorship.
@@ -30,8 +30,30 @@
     </nav>
 
     <div class="container">
+      <div class="row mt-2 justify-content-center">
+        <div class="col-sm-6 align-center mb-3">
+          <div class="card">
+              <h5 class="card-header">Total bins created</h5>
+              <div class="card-body big-number">
+                3
+              </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 align-center mb-3">
+          <div class="card">
+              <h5 class="card-header">Total bytes stored</h5>
+              <div class="card-body big-number">
+                385.000
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
       <div class="row">
-        <div class="col-6">
+        <div class="col-sm-6 mb-3">
           <div class="card">
             <h4 class="card-header">Create New Bin</h4>
             <div class="card-body">
@@ -40,14 +62,27 @@
                   <textarea class="form-control" id="createTextarea" placeholder="Paste or type your text here"></textarea>
                 </div>
                 <div class="align-right">
-                  <button type="submit" class="btn btn-primary">Create!</button>
+                  <button type="submit" class="btn btn-primary">Create</button>
                 </div>
             </form>
             </div>
           </div>
         </div>
-        <div class="col-6">
-          <h1>Content</h1>
+
+        <div class="col-sm-6 mb-3">
+          <div class="card">
+            <h4 class="card-header">Read Bin</h4>
+            <div class="card-body">
+              <form>
+                <div class="form-group">
+                  <input class="form-control" type="number" placeholder="Bin number"/>
+                </div>
+                <div class="align-right">
+                  <button type="submit" class="btn btn-primary">Read</button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -63,6 +98,6 @@
     <script>
       AOS.init();
 		</script>
-    <script src="index.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>

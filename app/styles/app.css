@@ -1,0 +1,19 @@
+body {
+	font-family: 'Roboto', sans-serif;
+}
+
+.align-right {
+	text-align:right;
+}
+
+.align-center {
+	text-align:center;
+}
+
+.big-number {
+	font-size: 42px;
+}
+
+#createTextarea {
+	height: 300px;
+}
