@@ -15,7 +15,6 @@ const Flow = require('./flow.js');
 const Vault = require('./vault.js');
 const Metamon = require('./metamon.js');
 const Bgmon = require('./bgmon.js');
-const Ui = require('./uiUtils.js');
 
 let _everbin;
 let _localDev = true; //set this to true (and disable metamask) to test with ganache
@@ -38,12 +37,12 @@ window.App = {
     
     /*
     App.initMenu();
-    App.fetchPauseVisibility();
-    App.setTotalSupply();
     App.showSection("sec_supply");
     App.hideLoader();
     App.updateVersion();
     */
+
+    App.setTotalBins();
   },
 
   initContracts: async function() {
@@ -59,13 +58,79 @@ window.App = {
       }
     }
   },
+  /////////////////////////////
+  setTotalBins: async function() {
+    Flow.call(_everbin,
+              "binCount",
+              [],
+              App.onTotalBinsResult,
+              App.onTotalBinsError)
+  },
 
+  onTotalBinsResult: function(functionName, result, convertFromWei) {
+    let finalResult = result.toString(10)
+    $("#totalBins").html(finalResult)
+  },
+
+  onTotalBinsError: function(functionName, error) {
+    alert("ERROR: cannot fetch total number of bins.")
+    console.log("totalBins error: " + error.message)
+  },
+
+  createNewBin: function() {
+    let content = $("#createTextarea").val()
+    
+    //@SOL: function create(string memory content) public returns(uint);
+    Flow.execute(_everbin,
+      "create",
+      [content],
+      {from:Metamon.currentUser(), gasPrice:Gasmon.idealGasPrice(1)},
+      App.onHash,
+      App.onExecutionSuccess,
+      App.onError);
+  },
+
+  onHash: function(systemName, hash) {
+    //$("#" + systemName + "_result").html(Vault.getPendingHashMessage(hash));
+    console.log(hash)
+  },
+
+  onError: function(systemName, message) {
+    //$("#" + systemName + "_result").html(Vault.getColoredErrorMessage(message));
+    //Ui.hideButtonLoader(systemName);
+    console.log(message)
+  },
+
+  onExecutionSuccess: async function(systemName, receipt) {
+    //$("#" + systemName + "_result").html(Vault.getSuccessHashMessage(receipt.tx));
+    //Ui.hideButtonLoader(systemName);
+
+    await App.setTotalBins();
+    console.log(JSON.stringify(receipt))
+  },
+
+  readBin: async function() {
+    let number = $("#binNumber").val()
+
+    //@SOL: mapping(uint => string) public bins;
+    Flow.call(_everbin,
+      "bins",
+      [number],
+      App.onReadResult,
+      App.onError)
+  },
+
+  onReadResult: function(functionName, result, convertFromWei) {
+    console.log(result)
+  },
+
+  ////////////////////////////
   onMetamaskError: function(message) {
     console.log(message);
   },
 
   onMetamaskNeedLogin: function() {
-    alert("Por favor, faça login no Metamask.");
+    alert("Please log into Metamask.");
     //App.setConnectButtonVisibility(true);
     console.log("onMetamaskNeedLogin");
   },

@@ -25,7 +25,7 @@
     <nav class="navbar navbar-light bg-light justify-content-center">
       <a class="navbar-brand"   id="logo" href="#">
         <img src="img/logo.png" width="40px">
-        Everbin: no moderation, no admin, no censorship.
+        Everbin: no moderation, no datacenter, no censorship.
       </a>
     </nav>
 
@@ -34,8 +34,8 @@
         <div class="col-sm-6 align-center mb-3">
           <div class="card">
               <h5 class="card-header">Total bins created</h5>
-              <div class="card-body big-number">
-                3
+              <div class="card-body big-number" id="totalBins">
+                Loading...
               </div>
           </div>
         </div>
@@ -75,7 +75,7 @@
             <div class="card-body">
               <form>
                 <div class="form-group">
-                  <input class="form-control" type="number" placeholder="Bin number"/>
+                  <input class="form-control" type="number" placeholder="Bin number" id="binNumber"/>
                 </div>
                 <div class="align-right">
                   <button type="submit" class="btn btn-primary">Read</button>

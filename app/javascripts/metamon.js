@@ -5,9 +5,9 @@
  * This is a WIP
 **/
 
-const messageMainnet = "Ambiente de produção (Mainnet)";
-const messageRopsten = "Ambiente de testes (Ropsten)";
-const messageLocal = "Ambiente de desenvolvimento (Local)";
+const messageMainnet = "Production Env (Mainnet)";
+const messageRopsten = "Test Env (Ropsten)";
+const messageLocal = "Dev Env (Local)";
 const messageOther = "Para continuar, selecione a rede Ropsten no Metamask";
 
 var _showEnvironmentWarning;
@@ -52,6 +52,9 @@ function init(onError, onNeedLogin, onUserLogin, onUserLogout, localDev, showEnv
 
 function addNetworkWarningDiv() {
   $('body').prepend("<div id=\"network_div\" style=\"display: none;\"></div>");
+  $("#network_div").css("color", "white");
+  $("#network_div").css("textAlign", "center");
+  $("#network_div").css("fontSize", "14px");
 }
 
 function setEnvironmentWarning() {
