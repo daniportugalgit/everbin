@@ -23,14 +23,19 @@
   </head>
   <body>
     <nav class="navbar navbar-light bg-light justify-content-center">
-      <a class="navbar-brand"   id="logo" href="#">
-        <img src="img/logo.png" width="40px">
-        Everbin: no moderation, no datacenter, no censorship.
+      <a class="navbar-brand d-none d-sm-block" id="logo" href="#">
+          <img src="img/logo.png" width="40px">        
+          Everbin: no moderation, no datacenter, no censorship.
+      </a>
+
+      <a class="navbar-brand d-block d-sm-none" id="logo2" href="#">
+        <img src="img/logo.png" width="40px">        
+        Everbin: no censorship.
       </a>
     </nav>
 
     <div class="container">
-      <div class="row mt-2 justify-content-center">
+      <div class="row mt-3 justify-content-center">
         <div class="col-sm-6 align-center mb-3">
           <div class="card">
               <h5 class="card-header">Total bins created</h5>
@@ -43,8 +48,8 @@
         <div class="col-sm-6 align-center mb-3">
           <div class="card">
               <h5 class="card-header">Total bytes stored</h5>
-              <div class="card-body big-number">
-                385.000
+              <div class="card-body big-number" id="totalBytes">
+                Loading...
               </div>
           </div>
         </div>
@@ -54,15 +59,15 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-6 mb-3">
-          <div class="card">
+          <div class="card h-100">
             <h4 class="card-header">Create New Bin</h4>
             <div class="card-body">
-              <form>
+              <form onsubmit="App.createNewBin(); return false;">
                 <div class="form-group">
                   <textarea class="form-control" id="createTextarea" placeholder="Paste or type your text here"></textarea>
                 </div>
                 <div class="align-right">
-                  <button type="submit" class="btn btn-primary">Create</button>
+                  <button type="submit" name="Submit" value="Submit" class="btn btn-primary">Create</button>
                 </div>
             </form>
             </div>
@@ -70,15 +75,15 @@
         </div>
 
         <div class="col-sm-6 mb-3">
-          <div class="card">
+          <div class="card h-100">
             <h4 class="card-header">Read Bin</h4>
             <div class="card-body">
-              <form>
+              <form onsubmit="App.readBin(); return false;">
                 <div class="form-group">
-                  <input class="form-control" type="number" placeholder="Bin number" id="binNumber"/>
+                    <input class="form-control" type="number" placeholder="Bin number" id="binNumber"/>
                 </div>
                 <div class="align-right">
-                  <button type="submit" class="btn btn-primary">Read</button>
+                  <button type="submit" calue="Submit" class="btn btn-primary">Read</button>
                 </div>
               </form>
             </div>

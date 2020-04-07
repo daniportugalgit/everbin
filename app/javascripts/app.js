@@ -1,60 +1,65 @@
 // Import the page's CSS. Webpack will know what to do with it.
-import "../styles/app.css";
+import "../styles/app.css"
 
 // Import basic libraries:
-import Web3 from 'web3';
-import TruffleContract from 'truffle-contract';
-import Gasmon from 'gasmon';
+import Web3 from 'web3'
+import TruffleContract from 'truffle-contract'
+import Gasmon from 'gasmon'
 
 // Import contract artifacts and turn them into usable abstractions:
-import contract_artifacts from '../../build/contracts/Everbin.json';
-const Contract = TruffleContract(contract_artifacts);
+import contract_artifacts from '../../build/contracts/Everbin.json'
+const Contract = TruffleContract(contract_artifacts)
 
 // Import my custom tools:
-const Flow = require('./flow.js');
-const Vault = require('./vault.js');
-const Metamon = require('./metamon.js');
-const Bgmon = require('./bgmon.js');
+const Flow = require('./flow.js')
+const Vault = require('./vault.js')
+const Metamon = require('./metamon.js')
+const Bgmon = require('./bgmon.js')
 
-let _everbin;
-let _localDev = true; //set this to true (and disable metamask) to test with ganache
+const backendUrl = "http://localhost:3333"
+
+let _everbin
+let _localDev = true //set this to true (and disable metamask) to test with ganache
+
+
 
 window.App = {
   start: async function() {
-    var self = this;
+    var self = this
 
-    Vault.setEnvironment(Metamon.currentNetwork());
+    Vault.setEnvironment(Metamon.currentNetwork())
 
-    await App.initContracts();
+    await App.initContracts()
 
     Metamon.init(App.onMetamaskError,
                  App.onMetamaskNeedLogin,
                  App.onMetamaskConnect,
                  App.onMetamaskDisconnect,
-                 _localDev, true);
+                 _localDev, true)
 
-    Gasmon.init(App.onGasPricesReceived);
+    Gasmon.init(App.onGasPricesReceived)
     
     /*
-    App.initMenu();
-    App.showSection("sec_supply");
-    App.hideLoader();
-    App.updateVersion();
+    App.initMenu()
+    App.showSection("sec_supply")
+    App.hideLoader()
+    App.updateVersion()
     */
 
-    App.setTotalBins();
+    App.setTotalBins()
+    App.setTotalBytes()
   },
 
   initContracts: async function() {
-    Contract.setProvider(web3.currentProvider);
+    Contract.setProvider(web3.currentProvider)
     
     if (_localDev) {
-      _everbin = await Contract.deployed();
+      _everbin = await Contract.deployed()
     } else {
       try {
-        _everbin = await Contract.at(Vault.currentAddress("everbin"));
+        _everbin = await Contract.at(Vault.currentAddress("everbin"))
       } catch(e) {
-        console.error("ERROR: " + e.message);
+        console.error("ERROR: " + e.message)
       }
     }
   },
@@ -77,6 +82,32 @@ window.App = {
     console.log("totalBins error: " + error.message)
   },
 
+  ///////////////////////////////////
+
+  setTotalBytes: async function() {
+    fetch(backendUrl + "/bytes")
+      .then(function(response){
+        response.json().then(function(data){
+          App.onTotalBytesReceived(data);
+        });
+      })
+      .catch(function(e){ 
+        console.error('Could not fetch total bytes from the off-chain backend: ', e.message);
+      });
+  },
+
+  /*
+  {
+    "total_bytes": 204,
+    "last_bin": 0
+  }
+  */
+  onTotalBytesReceived: function(response) {
+    $('#totalBytes').html(response.total_bytes);
+  },
+
+  //////////////////////////////////
+
   createNewBin: function() {
     let content = $("#createTextarea").val()
     
@@ -88,24 +119,46 @@ window.App = {
       App.onHash,
       App.onExecutionSuccess,
       App.onError);
+
+      App.sendBytesToBackend()
+  },
+
+  //weird flow, just for studiyng the connection with an off-chain backend (should be removed later)
+  sendBytesToBackend: function() {
+    let content = $("#createTextarea").val()
+    let bytes = (new TextEncoder().encode(content)).length
+    fetch(backendUrl + "/bin/create",
+    { 
+      method: "POST",
+      body: JSON.stringify({ bytes: bytes }), 
+      headers: { "Content-type": "application/json; charset=UTF-8" }
+    })
+    .then(function(response){
+      response.json().then(function(data){
+        App.onTotalBytesReceived(data);
+      });
+    })
+    .catch(function(e){ 
+      console.error('Could not fetch total bytes from the off-chain backend: ', e.message);
+    });
   },
 
   onHash: function(systemName, hash) {
     //$("#" + systemName + "_result").html(Vault.getPendingHashMessage(hash));
-    console.log(hash)
+    console.log('*** onHash: ' + hash)
   },
 
   onError: function(systemName, message) {
     //$("#" + systemName + "_result").html(Vault.getColoredErrorMessage(message));
     //Ui.hideButtonLoader(systemName);
-    console.log(message)
+    console.log('*** onError: ' + hash)
   },
 
   onExecutionSuccess: async function(systemName, receipt) {
     //$("#" + systemName + "_result").html(Vault.getSuccessHashMessage(receipt.tx));
     //Ui.hideButtonLoader(systemName);
 
-    await App.setTotalBins();
+    await App.setTotalBins()
     console.log(JSON.stringify(receipt))
   },
 
