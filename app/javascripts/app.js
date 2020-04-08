@@ -17,7 +17,7 @@ const Metamon = require('./metamon.js')
 const Bgmon = require('./bgmon.js')
 
 let _everbin
-let _localDev = true //set this to true (and disable metamask) to test with ganache
+let _localDev = false //set this to true (and disable metamask) to test with ganache
 
 window.App = {
   start: async function() {
@@ -72,12 +72,14 @@ window.App = {
 
   createNewBin: function() {
     let content = $("#createTextarea").val()
+
+    App.showButtonLoader('create')
     
     //@SOL: function create(string memory content) public returns(uint, uint);
     Flow.execute(_everbin,
       "create",
       [content],
-      {from:Metamon.currentUser(), gasPrice:Gasmon.idealGasPrice(1)},
+      {from:Metamon.currentUser(), gasPrice:Gasmon.idealGasPrice(2)},
       App.onHash,
       App.onExecutionSuccess,
       App.onError);
@@ -90,14 +92,14 @@ window.App = {
 
   onError: function(systemName, message) {
     //$("#" + systemName + "_result").html(Vault.getColoredErrorMessage(message));
-    //Ui.hideButtonLoader(systemName);
-    console.log('*** onError: ' + hash)
+    App.hideButtonLoader(systemName)
+    console.log('*** onError: ' + message)
   },
 
   onExecutionSuccess: async function(systemName, receipt) {
     //$("#" + systemName + "_result").html(Vault.getSuccessHashMessage(receipt.tx));
-    //Ui.hideButtonLoader(systemName);
 
+    App.hideButtonLoader(systemName)
     await App.setTotals()
     console.log(JSON.stringify(receipt))
   },
@@ -105,16 +107,39 @@ window.App = {
   readBin: async function() {
     let number = $("#binNumber").val()
 
+    $("#readForm").hide();
+	$("#readLoader").show();
+
     //@SOL: mapping(uint => string) public bins;
     Flow.call(_everbin,
       "bins",
       [number],
       App.onReadResult,
-      App.onError)
+      App.onReadError)
   },
 
   onReadResult: function(functionName, result, convertFromWei) {
+    $("#readForm").show();
+    $("#readLoader").hide();
+    
     console.log(result)
+  },
+
+  onReadError: function(systemName, message) {
+    //$("#" + systemName + "_result").html(Vault.getColoredErrorMessage(message));
+    $("#readForm").show();
+    $("#readLoader").hide();
+    console.log('*** onError: ' + message)
+  },
+
+  showButtonLoader: function(buttonName) {
+    $("#" + buttonName + "Button").hide();
+	$("#" + buttonName + "Loader").show();
+  },
+
+  hideButtonLoader: function(buttonName) {
+    $("#" + buttonName + "Button").show();
+	$("#" + buttonName + "Loader").hide();
   },
 
   ////////////////////////////

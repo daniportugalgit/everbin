@@ -4,7 +4,7 @@ const sections = ["sec_balances", "sec_supply", "sec_roles", "sec_blocklist", "s
 var _mainnet = {};
 _mainnet.everbin = "0x0000000000000000000000000000000000000000";
 var _ropsten = {};
-_ropsten.everbin = "0x6351a6162380e5d22f61d4828994983e85cEA673";
+_ropsten.everbin = "0xdC71087e70ec5B6Fe24a108aF364aAc0df257AD9";
 var _deployed = {};
 _deployed.everbin = _ropsten.everbin;
 
