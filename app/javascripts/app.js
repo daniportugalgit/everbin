@@ -121,6 +121,10 @@ window.App = {
   onReadResult: function(functionName, result, convertFromWei) {
     $("#readForm").show();
     $("#readLoader").hide();
+
+    $("#readingBinNumber").html($("#binNumber").val());
+    $("#readTextarea").html(result);
+    $("#readContainer").show();
     
     console.log(result)
   },
@@ -140,6 +144,10 @@ window.App = {
   hideButtonLoader: function(buttonName) {
     $("#" + buttonName + "Button").show();
 	$("#" + buttonName + "Loader").hide();
+  },
+
+  hideReadBin: function() {
+    $("#readContainer").hide();
   },
 
   ////////////////////////////

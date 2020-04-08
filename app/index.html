@@ -35,7 +35,7 @@
     </nav>
 
     <div >
-      <div id="subtitle" data-aos="zoom-in" data-aos-delay="1400" data-aos-duration="3000">
+      <div id="subtitle" data-aos="zoom-in" data-aos-delay="1700" data-aos-duration="3000">
         I'm a simple non-profit Pastebin on the Ethereum blockchain.
       </div>
     </div>
@@ -46,7 +46,7 @@
       <div class="row mt-3 justify-content-center">
 
         <div class="col-md-4 align-center mb-3">
-          <div class="h-100" data-aos="flip-left" data-aos-delay="500">
+          <div class="h-100" data-aos="flip-left" data-aos-delay="1200">
             <div class="card h-100">
                 <h5 class="card-header">Total bins created</h5>
                 <div class="card-body big-number" id="totalBins">
@@ -57,7 +57,7 @@
         </div>
 
         <div class="col-md-4 align-center mb-3">
-          <div class="h-100" data-aos="flip-left" data-aos-delay="800">
+          <div class="h-100" data-aos="flip-left" data-aos-delay="1400">
             <div class="card h-100">
                 <h5 class="card-header">Total bytes stored</h5>
                 <div class="card-body big-number" id="totalBytes">
@@ -68,14 +68,14 @@
         </div>
 
         <div class="col-md-4 mb-3">
-          <div class="h-100" data-aos="flip-left" data-aos-delay="1100">
+          <div class="h-100" data-aos="flip-left" data-aos-delay="1600">
             <div class="card">
               <h4 class="card-header">Read Bin</h4>
               <div class="card-body">
                 <div class="vertical-center">
                   <form class="form-inline justify-content-center" onsubmit="App.readBin(); return false;" id="readForm">
                     <div class="form-group" id="binNumberDiv">
-                        <input class="form-control" type="number" placeholder="Bin number" id="binNumber"/>
+                        <input class="form-control" type="number" placeholder="Bin number" id="binNumber" min="1" />
                     </div>
                     <div class="align-right ml-2">
                       <button type="submit" calue="Submit" class="btn btn-primary" id="readButton">Read</button>
@@ -91,10 +91,27 @@
       </div>
     </div>
 
+    <div class="container" id="readContainer" style="display: none;">
+      <div class="row">
+        <div class="col-sm-12 mb-3">
+          <div data-aos="zoom-in-down" data-aos-delay="1800">
+            <div class="card h-100">
+              <h4 class="card-header">Reading Bin #<span id="readingBinNumber">1</span>
+                <button class="float-right" onclick="App.hideReadBin(); return false;">x</button>
+              </h4>
+              <div class="card-body">
+                <textarea class="form-control" id="readTextarea" readonly></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-sm-12 mb-3">
-          <div data-aos="zoom-in-down" data-aos-delay="1400">
+          <div data-aos="zoom-in-down" data-aos-delay="1800">
             <div class="card h-100">
               <h4 class="card-header">Create New Bin</h4>
               <div class="card-body">
