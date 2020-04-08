@@ -79,7 +79,7 @@ window.App = {
     Flow.execute(_everbin,
       "create",
       [content],
-      {from:Metamon.currentUser(), gasPrice:Gasmon.idealGasPrice(2)},
+      {from:Metamon.currentUser(), gasPrice:Gasmon.idealGasPrice(1)},
       App.onHash,
       App.onExecutionSuccess,
       App.onError);
@@ -125,6 +125,11 @@ window.App = {
     $("#readingBinNumber").html($("#binNumber").val());
     $("#readTextarea").html(result);
     $("#readContainer").show();
+
+    
+    $("#readTextarea").height("1px");
+    $("#readTextarea").height((10 + $("#readTextarea").prop("scrollHeight")) + "px");
+    
     
     console.log(result)
   },

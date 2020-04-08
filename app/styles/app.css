@@ -38,6 +38,10 @@ body {
 	clear: both;
 }
 
+#readTextarea {
+	overflow: hidden;
+}
+
 @media only screen and (max-width: 575px) {
 	#binNumber {
 		position: relative;
