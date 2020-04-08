@@ -36,8 +36,9 @@
 
     <div class="container">
       <div class="row mt-3 justify-content-center">
-        <div class="col-sm-6 align-center mb-3">
-          <div class="card">
+
+        <div class="col-md-4 align-center mb-3">
+          <div class="card h-100">
               <h5 class="card-header">Total bins created</h5>
               <div class="card-body big-number" id="totalBins">
                 Loading...
@@ -45,47 +46,51 @@
           </div>
         </div>
 
-        <div class="col-sm-6 align-center mb-3">
-          <div class="card">
+        <div class="col-md-4 align-center mb-3">
+          <div class="card h-100">
               <h5 class="card-header">Total bytes stored</h5>
               <div class="card-body big-number" id="totalBytes">
                 Loading...
               </div>
           </div>
         </div>
+
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <h4 class="card-header">Read Bin</h4>
+            <div class="card-body">
+              <div class="vertical-center">
+                <form class="form-inline justify-content-center" onsubmit="App.readBin(); return false;">
+                  <div class="form-group">
+                      <input class="form-control" type="number" placeholder="Bin number" id="binNumber"/>
+                  </div>
+                  <div class="align-right ml-2">
+                    <button type="submit" calue="Submit" class="btn btn-primary">Read</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
     <div class="container">
       <div class="row">
-        <div class="col-sm-6 mb-3">
+        <div class="col-sm-12 mb-3">
           <div class="card h-100">
             <h4 class="card-header">Create New Bin</h4>
             <div class="card-body">
               <form onsubmit="App.createNewBin(); return false;">
                 <div class="form-group">
-                  <textarea class="form-control" id="createTextarea" placeholder="Paste or type your text here"></textarea>
+                  <textarea class="form-control" id="createTextarea" maxlength="10000" placeholder="Paste or type your text here"></textarea>
                 </div>
-                <div class="align-right">
-                  <button type="submit" name="Submit" value="Submit" class="btn btn-primary">Create</button>
-                </div>
-            </form>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6 mb-3">
-          <div class="card h-100">
-            <h4 class="card-header">Read Bin</h4>
-            <div class="card-body">
-              <form onsubmit="App.readBin(); return false;">
-                <div class="form-group">
-                    <input class="form-control" type="number" placeholder="Bin number" id="binNumber"/>
-                </div>
-                <div class="align-right">
-                  <button type="submit" calue="Submit" class="btn btn-primary">Read</button>
-                </div>
+                  <button type="submit" name="Submit" value="Submit" class="btn btn-primary w-100">Create</button>
               </form>
+            </div>
+            <div class="card-footer" id="createBinFooter">
+              Bin #4598 created!
             </div>
           </div>
         </div>

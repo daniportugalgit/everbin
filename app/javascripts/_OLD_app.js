@@ -1,3 +1,6 @@
+//Keeping this file because it has a hybrid implementation with two backens (on and off chain);
+//And although it's terrible, I want to remember this. Judge me.
+
 // Import the page's CSS. Webpack will know what to do with it.
 import "../styles/app.css"
 
@@ -16,8 +19,12 @@ const Vault = require('./vault.js')
 const Metamon = require('./metamon.js')
 const Bgmon = require('./bgmon.js')
 
+const backendUrl = "http://localhost:3333"
+
 let _everbin
 let _localDev = true //set this to true (and disable metamask) to test with ganache
+
+
 
 window.App = {
   start: async function() {
@@ -31,11 +38,12 @@ window.App = {
                  App.onMetamaskNeedLogin,
                  App.onMetamaskConnect,
                  App.onMetamaskDisconnect,
-                 _localDev, false)
+                 _localDev, true)
 
     Gasmon.init(App.onGasPricesReceived)
 
-    App.setTotals()
+    App.setTotalBins()
+    App.setTotalBytes()
   },
 
   initContracts: async function() {
@@ -52,28 +60,54 @@ window.App = {
     }
   },
   /////////////////////////////
-  setTotals: async function() {
+  setTotalBins: async function() {
     Flow.call(_everbin,
-              "status",
+              "binCount",
               [],
-              App.onTotalsResult,
-              App.onTotalsError)
+              App.onTotalBinsResult,
+              App.onTotalBinsError)
   },
 
-  onTotalsResult: function(functionName, result, convertFromWei) {
-    $("#totalBins").html(result[0].toString(10))
-    $("#totalBytes").html(result[1].toString(10))
+  onTotalBinsResult: function(functionName, result, convertFromWei) {
+    let finalResult = result.toString(10)
+    $("#totalBins").html(finalResult)
   },
 
   onTotalBinsError: function(functionName, error) {
-    alert("ERROR: cannot fetch total number of bins and bytes.")
-    console.log("totals error: " + error.message)
+    alert("ERROR: cannot fetch total number of bins.")
+    console.log("totalBins error: " + error.message)
   },
+
+  ///////////////////////////////////
+
+  setTotalBytes: async function() {
+    fetch(backendUrl + "/bytes")
+      .then(function(response){
+        response.json().then(function(data){
+          App.onTotalBytesReceived(data);
+        });
+      })
+      .catch(function(e){ 
+        console.error('Could not fetch total bytes from the off-chain backend: ', e.message);
+      });
+  },
+
+  /*
+  {
+    "total_bytes": 204,
+    "last_bin": 0
+  }
+  */
+  onTotalBytesReceived: function(response) {
+    $('#totalBytes').html(response.total_bytes);
+  },
+
+  //////////////////////////////////
 
   createNewBin: function() {
     let content = $("#createTextarea").val()
     
-    //@SOL: function create(string memory content) public returns(uint, uint);
+    //@SOL: function create(string memory content) public returns(uint);
     Flow.execute(_everbin,
       "create",
       [content],
@@ -81,6 +115,28 @@ window.App = {
       App.onHash,
       App.onExecutionSuccess,
       App.onError);
+
+      App.sendBytesToBackend()
+  },
+
+  //weird flow, just for studiyng the connection with an off-chain backend (should be removed later)
+  sendBytesToBackend: function() {
+    let content = $("#createTextarea").val()
+    let bytes = (new TextEncoder().encode(content)).length
+    fetch(backendUrl + "/bin/create",
+    { 
+      method: "POST",
+      body: JSON.stringify({ bytes: bytes }), 
+      headers: { "Content-type": "application/json; charset=UTF-8" }
+    })
+    .then(function(response){
+      response.json().then(function(data){
+        App.onTotalBytesReceived(data);
+      });
+    })
+    .catch(function(e){ 
+      console.error('Could not fetch total bytes from the off-chain backend: ', e.message);
+    });
   },
 
   onHash: function(systemName, hash) {
@@ -98,7 +154,7 @@ window.App = {
     //$("#" + systemName + "_result").html(Vault.getSuccessHashMessage(receipt.tx));
     //Ui.hideButtonLoader(systemName);
 
-    await App.setTotals()
+    await App.setTotalBins()
     console.log(JSON.stringify(receipt))
   },
 
