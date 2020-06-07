@@ -73,7 +73,8 @@ window.App = {
   createNewBin: function() {
     let content = $("#createTextarea").val()
 
-    App.showButtonLoader('create')
+    App.showButtonLoader('create');
+    App.hideCardMessage();
     
     //@SOL: function create(string memory content) public returns(uint, uint);
     Flow.execute(_everbin,
@@ -86,29 +87,37 @@ window.App = {
   },
 
   onHash: function(systemName, hash) {
-    //$("#" + systemName + "_result").html(Vault.getPendingHashMessage(hash));
-    console.log('*** onHash: ' + hash)
+    App.showCardMessage(Vault.getPendingHashMessage(hash));
+    console.log('*** onHash: ' + hash);
   },
 
   onError: function(systemName, message) {
-    //$("#" + systemName + "_result").html(Vault.getColoredErrorMessage(message));
+    App.showCardMessage(Vault.getColoredErrorMessage(message));
     App.hideButtonLoader(systemName)
     console.log('*** onError: ' + message)
   },
 
   onExecutionSuccess: async function(systemName, receipt) {
-    //$("#" + systemName + "_result").html(Vault.getSuccessHashMessage(receipt.tx));
-
+    App.showCardMessage(Vault.getSuccessHashMessage(receipt.tx) + " Bin #" + receipt.logs[0].args.id);
     App.hideButtonLoader(systemName)
     await App.setTotals()
     console.log(JSON.stringify(receipt))
+  },
+
+  showCardMessage: function(message) {
+    $("#createBinFooter").show();
+    $("#createBinFooter").html(message);
+  },
+
+  hideCardMessage: function() {
+    $("#createBinFooter").hide();
   },
 
   readBin: async function() {
     let number = $("#binNumber").val()
 
     $("#readForm").hide();
-	$("#readLoader").show();
+	  $("#readLoader").show();
 
     //@SOL: mapping(uint => string) public bins;
     Flow.call(_everbin,
@@ -143,12 +152,12 @@ window.App = {
 
   showButtonLoader: function(buttonName) {
     $("#" + buttonName + "Button").hide();
-	$("#" + buttonName + "Loader").show();
+	  $("#" + buttonName + "Loader").show();
   },
 
   hideButtonLoader: function(buttonName) {
     $("#" + buttonName + "Button").show();
-	$("#" + buttonName + "Loader").hide();
+	  $("#" + buttonName + "Loader").hide();
   },
 
   hideReadBin: function() {
@@ -167,18 +176,12 @@ window.App = {
   },
 
   onMetamaskConnect: async function(accs) {
-    //$("#user_address").html(Metamon.currentUser());
-    //App.setConnectButtonVisibility(false);
-    //await App.setUserBadges();
     Bgmon.activateBackground();
-    //$("#speed_div").show();
     console.log("onMetamaskConnect");
   },
 
   onMetamaskDisconnect: function() {
-    //App.setConnectButtonVisibility(true);
     Bgmon.deactivateBackground();
-    //$("#speed_div").hide();
     console.log("onMetamaskDisconnect");
   },
 
@@ -211,7 +214,9 @@ window.App = {
   },
 };
 
+/*
 window.addEventListener('load', function() {
+
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
   if (typeof window.web3 !== 'undefined') {
     console.log("Using web3 detected from external source.")
@@ -219,6 +224,31 @@ window.addEventListener('load', function() {
     window.web3 = new Web3(web3.currentProvider);
     //window.web3 = window['ethereum'] || window.web3.currentProvider;
   } else {
+    console.warn("No web3 detected. Falling back to http://localhost:8545.");
+    window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+  }
+  App.start();
+});
+*/
+window.addEventListener("load", async () => {
+  // Modern dapp browsers...
+  if (window.ethereum) {
+    window.web3 = new Web3(window.ethereum);
+    try {
+      // Request account access if needed
+      await window.ethereum.enable();
+    } catch (error) {
+      // User denied account access...
+      console.warn("User denied Metamask account access.");
+    }
+  }
+  // Legacy dapp browsers...
+  else if (window.web3) {
+    window.web3 = new Web3(web3.currentProvider);
+  }
+  // Non-dapp browsers...
+  else {
+    //console.log("Non-Ethereum browser detected. You should consider trying MetaMask!");
     console.warn("No web3 detected. Falling back to http://localhost:8545.");
     window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
   }

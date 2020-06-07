@@ -2,7 +2,7 @@ const version = "0.9.6";
 const sections = ["sec_balances", "sec_supply", "sec_roles", "sec_blocklist", "sec_maintenance"];
 
 var _mainnet = {};
-_mainnet.everbin = "0x0000000000000000000000000000000000000000";
+_mainnet.everbin = "0x235c807707f453befc5b077de3295e278d223bdf";
 var _ropsten = {};
 _ropsten.everbin = "0xdC71087e70ec5B6Fe24a108aF364aAc0df257AD9";
 var _deployed = {};
