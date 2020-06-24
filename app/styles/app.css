@@ -2,6 +2,11 @@ body {
 	font-family: 'Roboto', sans-serif;
 }
 
+h6 {
+	font-size: 0.4em;
+	margin:0;
+}
+
 .align-right {
 	text-align:right;
 }
@@ -20,6 +25,19 @@ body {
 
 .vertical-center {
 	line-height: 60px;
+}
+
+.closeButtonDiv {
+	width:20px;
+	height:20px;
+	font-size:0.5em;
+}
+
+.closeButton {
+	border-radius: 20%;
+	border-color: darkgray;
+	border-style: solid;
+	border-width: 1px;
 }
 
 #createTextarea {
@@ -41,6 +59,15 @@ body {
 #readTextarea {
 	overflow: hidden;
 }
+
+#maxChars {
+	margin: 0;
+	padding: 0;
+	float:right;
+	position:relative;
+	top:10px;
+}
+
 
 @media only screen and (max-width: 575px) {
 	#binNumber {
@@ -79,8 +106,7 @@ body {
 
   #readLoader {
 	  top:10px;
-  }
-  
+	}
   
   @-webkit-keyframes spin {
 	0% { -webkit-transform: rotate(0deg); }

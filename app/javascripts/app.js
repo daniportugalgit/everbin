@@ -17,7 +17,7 @@ const Metamon = require('./metamon.js')
 const Bgmon = require('./bgmon.js')
 
 let _everbin
-let _localDev = false //set this to true (and disable metamask) to test with ganache
+let _localDev = false; //set this to true (and disable metamask) to test with ganache
 
 window.App = {
   start: async function() {
@@ -80,7 +80,7 @@ window.App = {
     Flow.execute(_everbin,
       "create",
       [content],
-      {from:Metamon.currentUser(), gasPrice:Gasmon.idealGasPrice(1)},
+      {from:Metamon.currentUser(), gasPrice:Gasmon.idealGasPrice(2)},
       App.onHash,
       App.onExecutionSuccess,
       App.onError);
@@ -167,6 +167,7 @@ window.App = {
   ////////////////////////////
   onMetamaskError: function(message) {
     console.log(message);
+    alert("You need metamask.io to interact with Everbin. Without it, this page won't load correctly.");
   },
 
   onMetamaskNeedLogin: function() {
@@ -214,22 +215,6 @@ window.App = {
   },
 };
 
-/*
-window.addEventListener('load', function() {
-
-  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-  if (typeof window.web3 !== 'undefined') {
-    console.log("Using web3 detected from external source.")
-    
-    window.web3 = new Web3(web3.currentProvider);
-    //window.web3 = window['ethereum'] || window.web3.currentProvider;
-  } else {
-    console.warn("No web3 detected. Falling back to http://localhost:8545.");
-    window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-  }
-  App.start();
-});
-*/
 window.addEventListener("load", async () => {
   // Modern dapp browsers...
   if (window.ethereum) {
@@ -240,6 +225,7 @@ window.addEventListener("load", async () => {
     } catch (error) {
       // User denied account access...
       console.warn("User denied Metamask account access.");
+      App.onMetamaskError();
     }
   }
   // Legacy dapp browsers...

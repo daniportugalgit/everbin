@@ -96,8 +96,10 @@
         <div class="col-sm-12 mb-3">
           <div data-aos="zoom-in-down" data-aos-delay="1800">
             <div class="card h-100">
-              <h4 class="card-header">Reading Bin #<span id="readingBinNumber">1</span>
-                <button class="float-right" onclick="App.hideReadBin(); return false;">x</button>
+              <h4 class="card-header d-flex">Reading Bin #<span id="readingBinNumber">1</span>
+                <div class="ml-auto my-auto closeButtonDiv">
+                  <button class="closeButton" onclick="App.hideReadBin(); return false;">x</button>
+                </div>
               </h4>
               <div class="card-body">
                 <textarea class="form-control" id="readTextarea" readonly></textarea>
@@ -113,7 +115,12 @@
         <div class="col-sm-12 mb-3">
           <div data-aos="zoom-in-down" data-aos-delay="1800">
             <div class="card h-100">
-              <h4 class="card-header">Create New Bin</h4>
+              <h4 class="card-header">Create New Bin
+                <div id="maxChars">
+                  <h6>Max characters: 10.000</h6>
+                </div>
+              </h4>
+              
               <div class="card-body">
                 <form onsubmit="App.createNewBin(); return false;">
                   <div class="form-group">
