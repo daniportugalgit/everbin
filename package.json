@@ -22,7 +22,7 @@
     "ganache-cli": "^6.8.1",
     "gasmon": "^1.1.10",
     "js-yaml": "^3.13.1",
-    "serialize-javascript": "^2.1.2",
+    "serialize-javascript": "^3.1.0",
     "truffle-assertions": "^0.9.2",
     "truffle-contract": "^4.0.31",
     "webpack-cli": "^3.3.10"
